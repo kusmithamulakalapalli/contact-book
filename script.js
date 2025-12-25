@@ -23,22 +23,29 @@ function showSlide(slideId, btn) {
 }
 
 // Add contact
-document.getElementById('contactForm').addEventListener('submit', function(e) {
+function addContact(e) {
     e.preventDefault();
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
     const email = document.getElementById('email').value;
     const favourite = document.getElementById('favourite').checked;
-    
-    if (phone.length !== 10) { alert('Phone must be 10 digits'); return; }
-    
+
+    if (phone.length !== 10) {
+        alert('Phone must be 10 digits'); 
+        return;
+    }
+
     const contact = { name, phone, email, favourite, id: Date.now() };
     contacts.push(contact);
     localStorage.setItem('contacts', JSON.stringify(contacts));
     alert('Contact saved!');
-    this.reset();
+    e.target.reset();
     showSlide('all');
-});
+}
+
+document
+  .getElementById('contactForm')
+  .addEventListener('submit', addContact);
 
 // Display contacts (alphabetical)
 function displayContacts(filter = 'all') {

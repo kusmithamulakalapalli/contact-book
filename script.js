@@ -27,7 +27,7 @@ function addContact(e) {
     const email = document.getElementById('emailInput').value.trim();
     const group = document.getElementById('groupInput').value || 'friends';
     const note = document.getElementById('noteInput').value.trim();
-    
+    const callTimeValue = document.getElementById('callTimeInput').value;
     if (!name || !phone) {
         alert('Name and phone are required');
         return;
@@ -44,7 +44,8 @@ function addContact(e) {
         email,
         group,
         favourite: false,
-        note
+        note,
+        callTime: callTimeValue ||''
     };
 
     contacts.push(contact);
@@ -95,17 +96,20 @@ function displayContacts(filter = 'all') {
 function createContactHTML(c) {
     const div = document.createElement('div');
     div.className = 'contact-item';
-    div.innerHTML = `
+   div.innerHTML = `
     <div class="avatar">${c.name[0]}</div>
     <div class="contact-info">
         <div class="contact-item-name">${c.name}</div>
         <div class="contact-item-phone">${c.phone}</div>
         <div class="contact-item-phone">${c.note ? c.note : ''}</div>
+        <div class="contact-item-phone">
+            ${c.callTime ? new Date(c.callTime).toLocaleString() : ''}
+        </div>
     </div>
     <div class="contact-actions">
         ...
     </div>
-    `;
+`;
     return div;
 }
 

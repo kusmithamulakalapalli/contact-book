@@ -12,12 +12,12 @@
     <nav class="navbar">
         <h2><i class="fas fa-address-book"></i> Smart Contacts</h2>
         <div class="nav-links">
-            <button onclick="showSlide('home')"><i class="fas fa-home"></i> Home</button>
-            <button onclick="showSlide('add')"><i class="fas fa-plus"></i> Add</button>
-            <button onclick="showSlide('all')"><i class="fas fa-list"></i> All</button>
-            <button onclick="showSlide('fav')"><i class="fas fa-star"></i> Favourites</button>
-            <button onclick="showSlide('missed')"><i class="fas fa-phone-slash"></i> Missed</button>
-        </div>
+    <button onclick="showSlide('home', this)"><i class="fas fa-home"></i> Smart Contacts</button>
+    <button onclick="showSlide('add', this)"><i class="fas fa-plus"></i> Add Contact</button>
+    <button onclick="showSlide('all', this)"><i class="fas fa-list"></i> All Contacts</button>
+    <button onclick="showSlide('fav', this)"><i class="fas fa-star"></i> Favourites</button>
+    <button onclick="showSlide('missed', this)"><i class="fas fa-phone-slash"></i> Missed Calls</button>
+</div>
     </nav>
 
     <!-- Home Slide -->
@@ -25,7 +25,7 @@
         <div class="welcome">
             <h1>Welcome to Smart Contacts</h1>
             <p>Manage your contacts with ease. Add, search, favourite, and more.</p>
-            <button onclick="showSlide('all')" class="btn-primary">View All Contacts</button>
+            <button onclick="showSlide('all', this)" class="btn-primary">View All Contacts</button>
         </div>
     </section>
 

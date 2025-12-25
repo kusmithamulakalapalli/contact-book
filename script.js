@@ -2,12 +2,23 @@ let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
 let missedCalls = JSON.parse(localStorage.getItem('missedCalls')) || [];
 
 // Show slide
-function showSlide(slideId) {
+function showSlide(slideId, btn) {
+    // remove active class from all slides
     document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+
+    // remove active from all nav buttons
     document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+
+    // activate selected slide
     document.getElementById(slideId).classList.add('active');
-    event.target.classList.add('active');
-    if (slideId === 'all' || slideId === 'fav') displayContacts();
+
+    // activate clicked button (if provided)
+    if (btn) {
+        btn.classList.add('active');
+    }
+
+    // extra logic
+    if (slideId === 'all') displayContacts();
     if (slideId === 'missed') displayMissed();
 }
 

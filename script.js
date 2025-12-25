@@ -42,16 +42,29 @@ function displayContacts(filter = 'all') {
     
     const container = filter === 'fav' ? favList : list;
     container.innerHTML = filtered.map(c => `
-        <div class="contact-card">
+        <div class="contact-card" data-id="${c.id}">
             <div class="contact-info">
                 <h3>${c.name}</h3>
-                <p>${c.phone} ${c.email ? `| ${c.email}` : ''}</p>
+                <p><i class="fas fa-phone"></i> ${c.phone} 
+                   ${c.email ? `<i class="fas fa-envelope"></i> ${c.email}` : ''}
+                </p>
             </div>
             <div class="contact-actions">
-                <a href="tel:${c.phone}" title="Call"><i class="fas fa-phone"></i></a>
-                <button onclick="toggleFavourite(${c.id})" title="Favourite">${c.favourite ? '💖' : '⭐'}</button>
-                <button onclick="addMissed(${c.id})" title="Missed Call"><i class="fas fa-phone-slash"></i></button>
-                <button onclick="deleteContact(${c.id})" title="Delete">🗑️</button>
+                <a href="tel:${c.phone}" class="action-btn call" title="Call">
+                    <i class="fas fa-phone"></i>
+                </a>
+                <a href="sms:${c.phone}?body=Hi!" class="action-btn message" title="Message">
+                    <i class="fas fa-sms"></i>
+                </a>
+                <button onclick="toggleFavourite(${c.id})" class="action-btn ${c.favourite ? 'fav-active' : ''}" title="Favourite">
+                    ${c.favourite ? '💖' : '⭐'}
+                </button>
+                <button onclick="addMissed(${c.id})" class="action-btn missed" title="Missed Call">
+                    <i class="fas fa-phone-slash"></i>
+                </button>
+                <button onclick="deleteContact(${c.id})" class="action-btn delete" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
             </div>
         </div>
     `).join('');

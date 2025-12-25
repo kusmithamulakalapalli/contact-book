@@ -21,3 +21,61 @@ input, button { width: 100%; padding: 1rem; margin: 0.5rem 0; border: none; bord
 form label { display: flex; align-items: center; margin: 1rem 0; font-size: 0.9rem; }
 form input[type="checkbox"] { width: auto; margin-right: 0.5rem; }
 @media (max-width: 600px) { .contact-card { flex-direction: column; text-align: center; gap: 1rem; } }
+.contact-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.action-btn {
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    color: white;
+}
+
+.action-btn.call { background: linear-gradient(45deg, #4CAF50, #45a049); }
+.action-btn.call:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(76,175,80,0.4); }
+
+.action-btn.message { background: linear-gradient(45deg, #2196F3, #1976D2); }
+.action-btn.message:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(33,150,243,0.4); }
+
+.action-btn.fav-active { background: linear-gradient(45deg, #FF9800, #F57C00); animation: pulse 1s infinite; }
+.action-btn.fav-active:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(255,152,0,0.4); }
+
+.action-btn.missed { background: linear-gradient(45deg, #FF5722, #D84315); }
+.action-btn.missed:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(255,87,34,0.4); }
+
+.action-btn.delete { background: linear-gradient(45deg, #f44336, #d32f2f); }
+.action-btn.delete:hover { transform: scale(1.1); box-shadow: 0 5px 15px rgba(244,67,54,0.4); animation: shake 0.5s; }
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.contact-info p i {
+    margin-right: 0.5rem;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+@media (max-width: 600px) {
+    .contact-actions { flex-wrap: wrap; justify-content: center; }
+    .action-btn { width: 40px; height: 40px; font-size: 1rem; }
+}

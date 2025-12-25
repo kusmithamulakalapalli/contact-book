@@ -1,161 +1,108 @@
-const nameInput = document.getElementById('name');
-const phoneInput = document.getElementById('phone');
-const emailInput = document.getElementById('email');
-const addBtn = document.getElementById('add-btn');
-const searchInput = document.getElementById('search');
-const contactList = document.getElementById('contact-list');
-const phoneClean = phone.replace(/s+/g, '');
-contacts[index] = { 
-    ...contacts[index],
-    name,
-    phone: phoneClean,
-    email
-};
 let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
+let missedCalls = JSON.parse(localStorage.getItem('missedCalls')) || [];
 
-function displayContacts(contactsToShow = contacts) {
-    contactList.innerHTML = '';
-    contactsToShow.forEach((contact, index) => {
-        const li = document.createElement('li');
-        li.className = 'contact-item';
-        li.innerHTML = `
-            <div>
-                <strong>${contact.name}</strong><br>
-                📞 ${contact.phone}<br>
-                ✉️ ${contact.email}
-            </div>
-            <button class="delete-btn" onclick="deleteContact(${index})">🗑️ Delete</button>
-        `;
-        contactList.appendChild(li);
-    });
+// Show slide
+function showSlide(slideId) {
+    document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
+    document.getElementById(slideId).classList.add('active');
+    event.target.classList.add('active');
+    if (slideId === 'all' || slideId === 'fav') displayContacts();
+    if (slideId === 'missed') displayMissed();
 }
 
-function toggleFavorite(index) {
-    contacts[index].favorite = !contacts[index].favorite;
+// Add contact
+document.getElementById('contactForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const phone = document.getElementById('phone').value;
+    const email = document.getElementById('email').value;
+    const favourite = document.getElementById('favourite').checked;
+    
+    if (phone.length !== 10) { alert('Phone must be 10 digits'); return; }
+    
+    const contact = { name, phone, email, favourite, id: Date.now() };
+    contacts.push(contact);
     localStorage.setItem('contacts', JSON.stringify(contacts));
-    displayContacts();
-}
-
-function addContact() {
-    const name = nameInput.value.trim();
-    const phoneText = phoneInput.value.trim();   // text from input
-    const email = emailInput.value.trim();
-
-    if (!name || !phoneText) {
-        alert('Name and phone required!');
-        return;
-    }
-
-    // simple cleaning – remove spaces
-    const phoneClean = String(phoneText).replace(/s+/g, '');
-
-    contacts.push({
-        name,
-        phone: phoneClean,
-        email,
-        favorite: false
-    });
-
-    if (typeof sortContacts === 'function') {
-        sortContacts();
-    }
-
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-    displayContacts();
-    clearForm();
-}
-
-function deleteContact(index) {
-    contacts.splice(index, 1);
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-    displayContacts();
-}
-
-function toggleFavorite(index) {
-    contacts[index].favorite = !contacts[index].favorite;
-    sortContacts();
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-    displayContacts();
-}
-
-searchInput.addEventListener('input', (e) => {
-    const query = e.target.value.toLowerCase();
-    const filtered = contacts.filter(c => 
-        c.name.toLowerCase().includes(query) || 
-        c.phone.includes(query) || 
-        c.email.toLowerCase().includes(query)
-    );
-    displayContacts(filtered);
+    alert('Contact saved!');
+    this.reset();
+    showSlide('all');
 });
 
-addBtn.addEventListener('click',addcontact);
-
-function downloadContacts() {
-    const dataStr = JSON.stringify(contacts, null, 2);
-    const blob = new Blob([dataStr], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'contacts.json';
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-}
-
-downloadBtn.addEventListener('click', downloadContacts);
-
-function sortContacts() {
-    contacts.sort((a, b) => {
-        if ((a.favorite || false) !== (b.favorite || false)) {
-            return a.favorite ? -1 : 1; // favourites first
-        }
-        return a.name.localeCompare(b.name); // then A–Z
-    });
-}
-
-const name = nameInput.value.trim();
-const phoneText = phoneInput.value.trim();
-const email = emailInput.value.trim();
-
-if (!name || !phoneText) {
-    alert('Name and phone required!');
-    return;
-}
-
-const phoneClean = String(phoneText).replace(/s+/g, '');
-
-contacts[index] = {
-    ...contacts[index],
-    name,
-    phone: phoneClean,
-    email
-};
-
-function displayContacts(contactsToShow = contacts) {
-    contactList.innerHTML = '';
-    contactsToShow.forEach((contact, index) => {
-        const favIcon = contact.favorite ? '⭐' : '☆';
-
-        const li = document.createElement('li');
-        li.className = 'contact-item';
-        li.innerHTML = `
+// Display contacts (alphabetical)
+function displayContacts(filter = 'all') {
+    const list = document.getElementById('contactsList');
+    const favList = document.getElementById('favList');
+    let filtered = contacts.sort((a, b) => a.name.localeCompare(b.name));
+    
+    if (filter === 'fav') filtered = filtered.filter(c => c.favourite);
+    
+    const search = document.getElementById('search')?.value.toLowerCase() || '';
+    filtered = filtered.filter(c => c.name.toLowerCase().includes(search));
+    
+    const container = filter === 'fav' ? favList : list;
+    container.innerHTML = filtered.map(c => `
+        <div class="contact-card">
             <div class="contact-info">
-                <strong>${contact.name}</strong>
-                <span>📞 ${contact.phone}</span>
-                <span>✉️ ${contact.email || ''}</span>
+                <h3>${c.name}</h3>
+                <p>${c.phone} ${c.email ? `| ${c.email}` : ''}</p>
             </div>
             <div class="contact-actions">
-                <button class="icon-btn" title="Favourite" onclick="toggleFavorite(${index})">
-                    ${favIcon}
-                </button>
-                <button class="edit-btn" onclick="editContact(${index})">✏️ Edit</button>
-                <button class="delete-btn" onclick="deleteContact(${index})">🗑️ Delete</button>
+                <a href="tel:${c.phone}" title="Call"><i class="fas fa-phone"></i></a>
+                <button onclick="toggleFavourite(${c.id})" title="Favourite">${c.favourite ? '💖' : '⭐'}</button>
+                <button onclick="addMissed(${c.id})" title="Missed Call"><i class="fas fa-phone-slash"></i></button>
+                <button onclick="deleteContact(${c.id})" title="Delete">🗑️</button>
             </div>
-        `;
-        contactList.appendChild(li);
-    });
+        </div>
+    `).join('');
 }
-addBtn.onclick = addContact;
-displayContacts();
+
+// Search
+document.getElementById('search')?.addEventListener('input', () => displayContacts());
+
+// Toggle favourite
+function toggleFavourite(id) {
+    const contact = contacts.find(c => c.id === id);
+    contact.favourite = !contact.favourite;
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+    displayContacts();
+}
+
+// Delete contact
+function deleteContact(id) {
+    if (confirm('Delete this contact?')) {
+        contacts = contacts.filter(c => c.id !== id);
+        localStorage.setItem('contacts', JSON.stringify(contacts));
+        displayContacts();
+    }
+}
+
+// Missed calls
+function displayMissed() {
+    const list = document.getElementById('missedList');
+    const sorted = missedCalls.sort((a, b) => new Date(b.time) - new Date(a.time));
+    list.innerHTML = sorted.map(c => `
+        <div class="contact-card">
+            <div>${c.name} (${c.phone})</div>
+            <small>${new Date(c.time).toLocaleString()}</small>
+        </div>
+    `).join('');
+}
+
+function addMissed(id) {
+    const contact = contacts.find(c => c.id === id);
+    missedCalls.unshift({ ...contact, time: new Date().toISOString() });
+    localStorage.setItem('missedCalls', JSON.stringify(missedCalls));
+    alert('Added to missed calls');
+}
+
+function clearMissed() {
+    if (confirm('Clear all missed calls?')) {
+        missedCalls = [];
+        localStorage.setItem('missedCalls', JSON.stringify(missedCalls));
+        displayMissed();
+    }
+}
+
+// Init
+showSlide('home');

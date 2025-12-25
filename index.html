@@ -3,27 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Contact Book</title>
+    <title>Smart Contacts</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <h1>🌈 Smart Contacts</h1>
-        <div class="form-container">
-            <input type="text" id="name" placeholder="Name">
-            <input type="tel" id="phone" placeholder="📱 Phone" inputmode="numeric">
-            <input type="email" id="email" placeholder="Email">
-            <button id="add-btn">+ Add Contact</button>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <h2><i class="fas fa-address-book"></i> Smart Contacts</h2>
+        <div class="nav-links">
+            <button onclick="showSlide('home')"><i class="fas fa-home"></i> Home</button>
+            <button onclick="showSlide('add')"><i class="fas fa-plus"></i> Add</button>
+            <button onclick="showSlide('all')"><i class="fas fa-list"></i> All</button>
+            <button onclick="showSlide('fav')"><i class="fas fa-star"></i> Favourites</button>
+            <button onclick="showSlide('missed')"><i class="fas fa-phone-slash"></i> Missed</button>
         </div>
-        <input type="text" id="search" placeholder="🔍 Search contacts...">
+    </nav>
 
-<div class="download-container">
-  <button id="download-btn">⬇️ Downlsoad Contacts (JSON)</button>
-</div>
+    <!-- Home Slide -->
+    <section id="home" class="slide active">
+        <div class="welcome">
+            <h1>Welcome to Smart Contacts</h1>
+            <p>Manage your contacts with ease. Add, search, favourite, and more.</p>
+            <button onclick="showSlide('all')" class="btn-primary">View All Contacts</button>
+        </div>
+    </section>
 
-<ul id="contact-list"></ul>
-    </div>
+    <!-- Add Contact Slide -->
+    <section id="add" class="slide">
+        <h2>Add New Contact</h2>
+        <form id="contactForm">
+            <input type="text" id="name" placeholder="Name" required>
+            <input type="tel" id="phone" placeholder="Phone (10 digits)" required>
+            <input type="email" id="email" placeholder="Email">
+            <label><input type="checkbox" id="favourite"> Favourite</label>
+            <button type="submit" class="btn-primary">Save Contact</button>
+        </form>
+    </section>
+
+    <!-- All Contacts Slide -->
+    <section id="all" class="slide">
+        <div class="search-bar">
+            <input type="text" id="search" placeholder="Search contacts...">
+        </div>
+        <div id="contactsList"></div>
+    </section>
+
+    <!-- Favourites Slide -->
+    <section id="fav" class="slide">
+        <h2>Favourites</h2>
+        <div id="favList"></div>
+    </section>
+
+    <!-- Missed Calls Slide -->
+    <section id="missed" class="slide">
+        <h2>Missed Calls</h2>
+        <div id="missedList"></div>
+        <button onclick="clearMissed()" class="btn-danger">Clear All</button>
+    </section>
+
     <script src="script.js"></script>
 </body>
 </html>

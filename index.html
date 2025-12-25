@@ -125,5 +125,96 @@
     contactsScreen.classList.add('active');
   }
 </script>
+<!-- Main Container -->
+<div class="main-slide">
+    <div class="app-container">
+        <!-- Left Side: Contacts List -->
+        <div class="phone-screen">
+            <div class="header">
+                <h2>My Contacts</h2>
+                <button class="add-btn" onclick="openAddForm()">+</button>
+            </div>
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="filterContacts('all')">All Contacts</button>
+                <button class="tab-btn" onclick="filterContacts('office')">Office</button>
+                <button class="tab-btn" onclick="filterContacts('family')">Family</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by name or number" onkeyup="searchContacts()">
+            </div>
+
+            <div class="contacts-list" id="contactsList">
+                <!-- Contacts will appear here dynamically -->
+            </div>
+
+            <div class="bottom-nav">
+                <button><i class="fas fa-star"></i></button>
+                <button><i class="fas fa-clock"></i></button>
+                <button><i class="fas fa-address-book"></i></button>
+                <button><i class="fas fa-ellipsis-h"></i></button>
+            </div>
+        </div>
+
+        <!-- Right Side: Contact Details View -->
+        <div class="phone-screen phone-screen-active" id="detailsView" style="display:none;">
+            <div class="details-header">
+                <button onclick="backToList()" class="back-btn">← Back</button>
+                <span>Contact</span>
+                <button class="edit-btn">Edit</button>
+            </div>
+
+            <div class="contact-avatar" id="detailAvatar">A</div>
+            <div class="contact-name" id="detailName">Contact Name</div>
+            <div class="contact-number" id="detailNumber">+91 0000000000</div>
+
+            <div class="action-buttons">
+                <button class="action-btn msg-btn" title="Message"><i class="fas fa-sms"></i></button>
+                <button class="action-btn call-btn" title="Call"><i class="fas fa-phone"></i></button>
+                <button class="action-btn video-btn" title="Video"><i class="fas fa-video"></i></button>
+                <button class="action-btn mail-btn" title="Email"><i class="fas fa-envelope"></i></button>
+            </div>
+
+            <div class="details-info">
+                <div class="info-section">
+                    <h4>Mobile</h4>
+                    <p id="detailMobile">Personal</p>
+                </div>
+                <div class="info-section">
+                    <h4>Group</h4>
+                    <p id="detailGroup">-</p>
+                </div>
+                <div class="info-section">
+                    <h4>Actions</h4>
+                    <button onclick="deleteContact()" class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Contact Form Modal -->
+    <div class="modal" id="addModal" style="display:none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Add New Contact</h3>
+                <button onclick="closeAddForm()" class="close-btn">&times;</button>
+            </div>
+            <form id="contactForm" onsubmit="addContact(event)">
+                <input type="text" id="nameInput" placeholder="Full Name" required>
+                <input type="tel" id="phoneInput" placeholder="Phone Number" required>
+                <input type="email" id="emailInput" placeholder="Email (optional)">
+                <select id="groupInput">
+                    <option value="">Select Group</option>
+                    <option value="office">Office</option>
+                    <option value="family">Family</option>
+                    <option value="friends">Friends</option>
+                </select>
+                <button type="submit" class="submit-btn">Add Contact</button>
+                <button type="button" onclick="closeAddForm()" class="cancel-btn">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

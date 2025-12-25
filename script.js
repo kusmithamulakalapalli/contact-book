@@ -119,3 +119,125 @@ function clearMissed() {
 
 // Init
 showSlide('home');
+// Sample contacts data (will use localStorage to save)
+let contact = JSON.parse(localStorage.getItem('contacts')) || [
+    {id:1, name:'Aaron', phone:'+91 9000000000', email:'aaron@email.com', group:'office'},
+    {id:2, name:'Ayin', phone:'+91 9001111111', email:'ayin@email.com', group:'family'},
+    {id:3, name:'Alexa', phone:'+91 9002222222', email:'alexa@email.com', group:'office'},
+    {id:4, name:'Aitha', phone:'+91 9003333333', email:'aitha@email.com', group:'family'},
+    {id:5, name:'Burnard', phone:'+91 9004444444', email:'burnard@email.com', group:'friends'},
+];
+
+let selectedContact = null;
+let currentFilter = 'all';
+
+// Save to localStorage
+function saveContacts() {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+}
+
+// Display contacts list
+function displayContacts(list = contacts) {
+    const contactsList = document.getElementById('contactsList');
+    contactsList.innerHTML = '';
+    
+    list.forEach(contact => {
+        const div = document.createElement('div');
+        div.className = 'contact-item';
+        div.innerHTML = `
+            <div class="avatar">${contact.name[0]}</div>
+            <div class="contact-info">
+                <div class="contact-item-name">${contact.name}</div>
+                <div class="contact-item-phone">${contact.phone}</div>
+            </div>
+            <div class="contact-options">
+                <button onclick="showContactDetails(${contact.id})" class="view-btn">View</button>
+                <button onclick="deleteContact(${contact.id})" class="del-btn"><i class="fas fa-trash"></i></button>
+            </div>
+        `;
+        contactsList.appendChild(div);
+    });
+}
+
+// Filter contacts
+function filterContacts(type) {
+    currentFilter = type;
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    if(type === 'all') {
+        displayContacts(contacts);
+    } else {
+        displayContacts(contacts.filter(c => c.group === type));
+    }
+}
+
+// Search contacts
+function searchContacts() {
+    const query = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = contacts.filter(c => 
+        c.name.toLowerCase().includes(query) || 
+        c.phone.includes(query)
+    );
+    displayContacts(filtered);
+}
+
+// Show contact details
+function showContactDetails(id) {
+    selectedContact = contacts.find(c => c.id === id);
+    if(!selectedContact) return;
+    
+    document.getElementById('contactsList').parentElement.style.display = 'none';
+    document.getElementById('detailsView').style.display = 'flex';
+    
+    document.getElementById('detailAvatar').textContent = selectedContact.name[0];
+    document.getElementById('detailName').textContent = selectedContact.name;
+    document.getElementById('detailNumber').textContent = selectedContact.phone;
+    document.getElementById('detailMobile').textContent = selectedContact.group || 'Personal';
+}
+
+// Back to list
+function backToList() {
+    document.getElementById('detailsView').style.display = 'none';
+    document.getElementById('contactsList').parentElement.style.display = 'block';
+}
+
+// Add contact form
+function openAddForm() {
+    document.getElementById('addModal').style.display = 'flex';
+}
+
+function closeAddForm() {
+    document.getElementById('addModal').style.display = 'none';
+    document.getElementById('contactForm').reset();
+}
+
+function addContact(event) {
+    event.preventDefault();
+    const newContact = {
+        id: contacts.length > 0 ? Math.max(...contacts.map(c => c.id)) + 1 : 1,
+        name: document.getElementById('nameInput').value,
+        phone: document.getElementById('phoneInput').value,
+        email: document.getElementById('emailInput').value,
+        group: document.getElementById('groupInput').value || 'friends'
+    };
+    
+    contacts.push(newContact);
+    saveContacts();
+    displayContacts(contacts);
+    closeAddForm();
+}
+
+// Delete contact
+function deleteContact(id = null) {
+    const contactId = id || selectedContact.id;
+    if(confirm('Are you sure?')) {
+        contacts = contacts.filter(c => c.id !== contactId);
+        saveContacts();
+        displayContacts(contacts);
+        backToList();
+    }
+}
+
+// Initialize
+displayContacts();

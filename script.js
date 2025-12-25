@@ -35,21 +35,31 @@ function toggleFavorite(index) {
     localStorage.setItem('contacts', JSON.stringify(contacts));
     displayContacts();
 }
+
 function addContact() {
     const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
+    const phoneText = phoneInput.value.trim();   // text from input
     const email = emailInput.value.trim();
 
-    if (!name || !phone) {
+    if (!name || !phoneText) {
         alert('Name and phone required!');
         return;
     }
 
-    const phoneClean = phone.replace(/s+/g, '');
+    // simple cleaning – remove spaces
+    const phoneClean = String(phoneText).replace(/s+/g, '');
 
-    contacts.push({ name, phone: phoneClean, email, favorite: false });
+    contacts.push({
+        name,
+        phone: phoneClean,
+        email,
+        favorite: false
+    });
 
-    sortContacts && sortContacts(); // if you added sortContacts, otherwise remove this line
+    if (typeof sortContacts === 'function') {
+        sortContacts();
+    }
+
     localStorage.setItem('contacts', JSON.stringify(contacts));
     displayContacts();
     clearForm();
@@ -105,6 +115,24 @@ function sortContacts() {
     });
 }
 
+const name = nameInput.value.trim();
+const phoneText = phoneInput.value.trim();
+const email = emailInput.value.trim();
+
+if (!name || !phoneText) {
+    alert('Name and phone required!');
+    return;
+}
+
+const phoneClean = String(phoneText).replace(/s+/g, '');
+
+contacts[index] = {
+    ...contacts[index],
+    name,
+    phone: phoneClean,
+    email
+};
+
 function displayContacts(contactsToShow = contacts) {
     contactList.innerHTML = '';
     contactsToShow.forEach((contact, index) => {
@@ -129,3 +157,5 @@ function displayContacts(contactsToShow = contacts) {
         contactList.appendChild(li);
     });
 }
+addBtn.onclick = addContact;
+displayContacts();

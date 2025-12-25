@@ -26,7 +26,8 @@ function addContact(e) {
     const phone = document.getElementById('phoneInput').value.trim();
     const email = document.getElementById('emailInput').value.trim();
     const group = document.getElementById('groupInput').value || 'friends';
-
+    const note = document.getElementById('noteInput').value.trim();
+    
     if (!name || !phone) {
         alert('Name and phone are required');
         return;
@@ -42,7 +43,8 @@ function addContact(e) {
         phone,
         email,
         group,
-        favourite: false
+        favourite: false,
+        note
     };
 
     contacts.push(contact);
@@ -94,22 +96,15 @@ function createContactHTML(c) {
     const div = document.createElement('div');
     div.className = 'contact-item';
     div.innerHTML = `
-        <div class="avatar">${c.name[0]}</div>
-        <div class="contact-info">
-            <div class="contact-item-name">${c.name}</div>
-            <div class="contact-item-phone">${c.phone}</div>
-        </div>
-        <div class="contact-actions">
-            <button class="action-btn" title="Favourite" onclick="toggleFavourite(${c.id})">
-                ${c.favourite ? '★' : '☆'}
-            </button>
-            <button class="action-btn" title="Add missed" onclick="addMissed(${c.id})">
-                <i class="fas fa-phone-slash"></i>
-            </button>
-            <button class="action-btn" title="Delete" onclick="deleteContact(${c.id})">
-                <i class="fas fa-trash"></i>
-            </button>
-        </div>
+    <div class="avatar">${c.name[0]}</div>
+    <div class="contact-info">
+        <div class="contact-item-name">${c.name}</div>
+        <div class="contact-item-phone">${c.phone}</div>
+        <div class="contact-item-phone">${c.note ? c.note : ''}</div>
+    </div>
+    <div class="contact-actions">
+        ...
+    </div>
     `;
     return div;
 }

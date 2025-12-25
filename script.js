@@ -37,16 +37,22 @@ function toggleFavorite(index) {
 }
 function addContact() {
     const name = nameInput.value.trim();
-    const phone = phonenInput.value.trim();
+    const phone = phoneInput.value.trim();
     const email = emailInput.value.trim();
+
+    if (!name || !phone) {
+        alert('Name and phone required!');
+        return;
+    }
+
     const phoneClean = phone.replace(/s+/g, '');
-    
-    if (!name || !phone) return alert('Name and phone required!');
-    contacts.push({ name, phone: phoneclean , email,favorite: false });
-    contacts.sort((a, b) => a.name.localeCompare(b.name)); // Auto-sort
+
+    contacts.push({ name, phone: phoneClean, email, favorite: false });
+
+    sortContacts && sortContacts(); // if you added sortContacts, otherwise remove this line
     localStorage.setItem('contacts', JSON.stringify(contacts));
     displayContacts();
-    nameInput.value = phoneInput.value = emailInput.value = '';
+    clearForm();
 }
 
 function deleteContact(index) {
@@ -72,7 +78,7 @@ searchInput.addEventListener('input', (e) => {
     displayContacts(filtered);
 });
 
-addBtn.onclick = addContact;
+addBtn.addEventListener('click',addcontact);
 
 function downloadContacts() {
     const dataStr = JSON.stringify(contacts, null, 2);

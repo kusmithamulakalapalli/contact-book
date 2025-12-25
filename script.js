@@ -54,4 +54,20 @@ searchInput.addEventListener('input', (e) => {
 
 addBtn.addEventListener('click', addContact);
 
+function downloadContacts() {
+    const dataStr = JSON.stringify(contacts, null, 2);
+    const blob = new Blob([dataStr], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'contacts.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+}
+
+downloadBtn.addEventListener('click', downloadContacts);
+
 displayContacts(); // Load on start

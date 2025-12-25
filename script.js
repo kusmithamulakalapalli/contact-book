@@ -1,3 +1,4 @@
+// Load data from localStorage
 let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
 let missedCalls = JSON.parse(localStorage.getItem('missedCalls')) || [];
 
@@ -25,35 +26,35 @@ function showSlide(slideId, btn) {
 // Add contact
 function addContact(e) {
     e.preventDefault();
+
     const name = document.getElementById('name').value;
     const phone = document.getElementById('phone').value;
     const email = document.getElementById('email').value;
     const favourite = document.getElementById('favourite').checked;
 
     if (phone.length !== 10) {
-        alert('Phone must be 10 digits'); 
+        alert('Phone must be 10 digits');
         return;
     }
 
     const contact = { name, phone, email, favourite, id: Date.now() };
     contacts.push(contact);
     localStorage.setItem('contacts', JSON.stringify(contacts));
+
     alert('Contact saved!');
     e.target.reset();
     showSlide('all');
 }
 
-document
-  .getElementById('contactForm')
-  .addEventListener('submit', addContact);
-
-// Display contacts (alphabetical)
-function displayContacts(filter = 'all') {
-    const list = document.getElementById('contactsList');
-    const favList = document.getElementById('favList');
-    let filtered = contacts.sort((a, b) => a.name.localeCompare(b.name));
+// attach submit handler once DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('contactForm');
+    if (form) {
+        form.addEventListener('submit', addContact);
+    }
+});
     
-    if (filter === 'fav') filtered = filtered.filter(c => c.favourite);
+{if (filter === 'fav') filtered = filtered.filter(c => c.favourite);
     
     const search = document.getElementById('search')?.value.toLowerCase() || '';
     filtered = filtered.filter(c => c.name.toLowerCase().includes(search));

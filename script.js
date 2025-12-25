@@ -4,7 +4,13 @@ const emailInput = document.getElementById('email');
 const addBtn = document.getElementById('add-btn');
 const searchInput = document.getElementById('search');
 const contactList = document.getElementById('contact-list');
-
+const phoneClean = phone.replace(/s+/g, '');
+contacts[index] = { 
+    ...contacts[index],
+    name,
+    phone: phoneClean,
+    email
+};
 let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
 
 function displayContacts(contactsToShow = contacts) {
@@ -33,9 +39,10 @@ function addContact() {
     const name = nameInput.value.trim();
     const phone = phonenInput.value.trim();
     const email = emailInput.value.trim();
+    const phoneClean = phone.replace(/s+/g, '');
     
     if (!name || !phone) return alert('Name and phone required!');
-    contacts.push({ name, phone , email,favorite: false });
+    contacts.push({ name, phone: phoneclean , email,favorite: false });
     contacts.sort((a, b) => a.name.localeCompare(b.name)); // Auto-sort
     localStorage.setItem('contacts', JSON.stringify(contacts));
     displayContacts();

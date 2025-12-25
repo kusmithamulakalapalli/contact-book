@@ -2,215 +2,89 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>Contact Book Application</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Contacts</title>
+    <!-- Font Awesome icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+<div class="main-slide">
+
     <!-- Navigation -->
     <nav class="navbar">
         <h2><i class="fas fa-address-book"></i> Smart Contacts</h2>
         <div class="nav-links">
-    <button onclick="showSlide('home', this)"><i class="fas fa-home"></i> Smart Contacts</button>
-    <button onclick="showSlide('add', this)"><i class="fas fa-plus"></i> Add Contact</button>
-    <button onclick="showSlide('all', this)"><i class="fas fa-list"></i> All Contacts</button>
-    <button onclick="showSlide('fav', this)"><i class="fas fa-star"></i> Favourites</button>
-    <button onclick="showSlide('missed', this)"><i class="fas fa-phone-slash"></i> Missed Calls</button>
-</div>
+            <button onclick="showSlide('home', this)" class="active"><i class="fas fa-home"></i> Home</button>
+            <button onclick="showSlide('add', this)"><i class="fas fa-plus"></i> Add</button>
+            <button onclick="showSlide('all', this)"><i class="fas fa-list"></i> All</button>
+            <button onclick="showSlide('fav', this)"><i class="fas fa-star"></i> Favourites</button>
+            <button onclick="showSlide('missed', this)"><i class="fas fa-phone-slash"></i> Missed</button>
+        </div>
     </nav>
 
-    <!-- Home Slide -->
-    <section id="home" class="slide active">
-        <div class="welcome">
-            <h1>Welcome to Smart Contacts</h1>
-            <p>Manage your contacts with ease. Add, search, favourite, and more.</p>
-            <button onclick="showSlide('all', this)" class="btn-primary">View All Contacts</button>
-        </div>
-    </section>
+    <!-- Slides container -->
+    <div class="slides">
 
-    <!-- Add Contact Slide -->
-    <section id="add" class="slide">
-        <h2>Add New Contact</h2>
-    
-    </section>
-
-    <!-- All Contacts Slide -->
-    <section id="all" class="slide">
-        <div class="search-bar">
-            <input type="text" id="search" placeholder="Search contacts...">
-        </div>
-        <div id="contactsList"></div>
-    </section>
-
-    <!-- Favourites Slide -->
-    <section id="fav" class="slide">
-        <h2>Favourites</h2>
-        <div id="favList"></div>
-    </section>
-
-    <!-- Missed Calls Slide -->
-    <section id="missed" class="slide">
-        <h2>Missed Calls</h2>
-        <div id="missedList"></div>
-        <button onclick="clearMissed()" class="btn-danger">Clear All</button>
-    </section>
-
-    <script src="script.js"></script>
-    <div class="app-bg">
-  <!-- Contacts List Screen -->
-  <div id="contactsScreen" class="phone-screen active">
-    <!-- top bar -->
-    <!-- search bar -->
-    <!-- list of contacts -->
-    <!-- bottom tab bar -->
-  </div>
-
-  <!-- Contact Detail Screen -->
-  <div id="detailScreen" class="phone-screen">
-    <!-- gradient header with photo, name, number -->
-    <!-- 4 round buttons: Message, Call, Video, Mail -->
-    <!-- white details area -->
-    <!-- bottom tab bar (same as list) -->
-  </div>
-</div>
-<div class="list-header">
-  <h2>My Contacts</h2>
-  <button class="icon-btn">+</button>
-</div>
-
-<div class="tabs-row">
-  <button class="tab active">All Contacts</button>
-  <button class="tab">Office</button>
-  <button class="tab">Family</button>
-  <button class="tab new">New Group</button>
-</div>
-
-<div class="search-box">
-  <input type="text" placeholder="Search by name or number">
-</div>
-
-<div class="contacts-list">
-  <!-- repeat rows -->
-  <div class="contact-row" onclick="openDetails()">
-    <div class="avatar"></div>
-    <div class="contact-text">
-      <div class="name">Aaron</div>
-      <div class="number">+91 9000 000 000</div>
-    </div>
-    <div class="dots">⋮</div>
-  </div>
-</div>
-
-<div class="bottom-nav">
-  <!-- 4–5 small icons like in your picture -->
-</div>
-<script>
-  const contactsScreen = document.getElementById('contactsScreen');
-  const detailScreen = document.getElementById('detailScreen');
-
-  function openDetails() {
-    contactsScreen.classList.remove('active');
-    detailScreen.classList.add('active');
-  }
-
-  function goBackToList() {
-    detailScreen.classList.remove('active');
-    contactsScreen.classList.add('active');
-  }
-</script>
-<!-- Main Container -->
-<div class="main-slide">
-    <div class="app-container">
-        <!-- Left Side: Contacts List -->
-        <div class="phone-screen">
-            <div class="header">
-                <h2>My Contacts</h2>
-                <button class="add-btn" onclick="openAddForm()">+</button>
+        <!-- Home slide -->
+        <section id="home" class="slide active">
+            <div class="welcome">
+                <h1>Welcome to Smart Contacts</h1>
+                <p>Manage your contacts with ease. Add, search, favourite, and monitor missed calls.</p>
+                <button onclick="showSlide('all', this)" class="btn-primary">View All Contacts</button>
             </div>
+        </section>
 
-            <div class="tabs">
-                <button class="tab-btn active" onclick="filterContacts('all')">All Contacts</button>
-                <button class="tab-btn" onclick="filterContacts('office')">Office</button>
-                <button class="tab-btn" onclick="filterContacts('family')">Family</button>
-            </div>
-
-            <div class="search-box">
-                <input type="text" id="searchInput" placeholder="Search by name or number" onkeyup="searchContacts()">
-            </div>
-
-            <div class="contacts-list" id="contactsList">
-                <!-- Contacts will appear here dynamically -->
-            </div>
-
-            <div class="bottom-nav">
-                <button><i class="fas fa-star"></i></button>
-                <button><i class="fas fa-clock"></i></button>
-                <button><i class="fas fa-address-book"></i></button>
-                <button><i class="fas fa-ellipsis-h"></i></button>
-            </div>
-        </div>
-
-        <!-- Right Side: Contact Details View -->
-        <div class="phone-screen phone-screen-active" id="detailsView" style="display:none;">
-            <div class="details-header">
-                <button onclick="backToList()" class="back-btn">← Back</button>
-                <span>Contact</span>
-                <button class="edit-btn">Edit</button>
-            </div>
-
-            <div class="contact-avatar" id="detailAvatar">A</div>
-            <div class="contact-name" id="detailName">Contact Name</div>
-            <div class="contact-number" id="detailNumber">+91 0000000000</div>
-
-            <div class="action-buttons">
-                <button class="action-btn msg-btn" title="Message"><i class="fas fa-sms"></i></button>
-                <button class="action-btn call-btn" title="Call"><i class="fas fa-phone"></i></button>
-                <button class="action-btn video-btn" title="Video"><i class="fas fa-video"></i></button>
-                <button class="action-btn mail-btn" title="Email"><i class="fas fa-envelope"></i></button>
-            </div>
-
-            <div class="details-info">
-                <div class="info-section">
-                    <h4>Mobile</h4>
-                    <p id="detailMobile">Personal</p>
-                </div>
-                <div class="info-section">
-                    <h4>Group</h4>
-                    <p id="detailGroup">-</p>
-                </div>
-                <div class="info-section">
-                    <h4>Actions</h4>
-                    <button onclick="deleteContact()" class="delete-btn"><i class="fas fa-trash"></i> Delete</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Add Contact Form Modal -->
-    <div class="modal" id="addModal" style="display:none;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Contact</h3>
-                <button onclick="closeAddForm()" class="close-btn">&times;</button>
-            </div>
-            <form id="contactForm"
-             onsubmit="addContact(event)">
-                <input type="text" id="nameInput" placeholder="Full Name" required>
-                <input type="tel" id="phoneInput" placeholder="Phone Number" required>
+        <!-- Add contact slide -->
+        <section id="add" class="slide">
+            <h2>Add New Contact</h2>
+            <form id="contactForm">
+                <input type="text" id="nameInput" placeholder="Full name" required>
+                <input type="tel" id="phoneInput" placeholder="Phone (10 digits)" required>
                 <input type="email" id="emailInput" placeholder="Email (optional)">
                 <select id="groupInput">
-                    <option value="">Select Group</option>
+                    <option value="">Select group</option>
                     <option value="office">Office</option>
                     <option value="family">Family</option>
                     <option value="friends">Friends</option>
                 </select>
-                <button type="submit" class="submit-btn">Add Contact</button>
-                <button type="button" onclick="closeAddForm()" class="cancel-btn">Cancel</button>
+                <button type="submit" class="btn-primary">Save Contact</button>
             </form>
-        </div>
+        </section>
+
+        <!-- All contacts slide -->
+        <section id="all" class="slide">
+            <h2>All Contacts</h2>
+
+            <div class="tabs-row">
+                <button class="tab-btn active" onclick="filterContacts('all', this)">All</button>
+                <button class="tab-btn" onclick="filterContacts('office', this)">Office</button>
+                <button class="tab-btn" onclick="filterContacts('family', this)">Family</button>
+                <button class="tab-btn" onclick="filterContacts('friends', this)">Friends</button>
+            </div>
+
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search by name or number">
+            </div>
+
+            <div id="contactsList" class="contacts-list"></div>
+        </section>
+
+        <!-- Favourites slide -->
+        <section id="fav" class="slide">
+            <h2>Favourite Contacts</h2>
+            <div id="favList" class="contacts-list"></div>
+        </section>
+
+        <!-- Missed calls slide -->
+        <section id="missed" class="slide">
+            <h2>Missed Calls</h2>
+            <button class="btn-secondary" onclick="clearMissed()">Clear All</button>
+            <div id="missedList" class="contacts-list"></div>
+        </section>
     </div>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>

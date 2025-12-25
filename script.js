@@ -1,39 +1,24 @@
-// ========================
-// Data from localStorage
-// ========================
+// ===== DATA =====
 let contacts = JSON.parse(localStorage.getItem('contacts')) || [];
 let missedCalls = JSON.parse(localStorage.getItem('missedCalls')) || [];
-
-// current filter for All Contacts tab-buttons (all / office / family / friends)
 let currentFilter = 'all';
 
-// ========================
-// Slide navigation
-// ========================
+// ===== SLIDES =====
 function showSlide(slideId, btn) {
-    // remove active class from all slides
     document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-
-    // remove active from all navbar buttons
     document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
 
-    // activate selected slide
     const slide = document.getElementById(slideId);
     if (slide) slide.classList.add('active');
 
-    // highlight clicked button
-    if (btn) {
-        btn.classList.add('active');
-    }
+    if (btn) btn.classList.add('active');
 
-    // extra logic per slide
     if (slideId === 'all') displayContacts();
+    if (slideId === 'fav') displayContacts('fav');
     if (slideId === 'missed') displayMissed();
 }
 
-// ========================
-// Add new contact
-// ========================
+// ===== ADD CONTACT =====
 function addContact(e) {
     e.preventDefault();
 
@@ -41,13 +26,11 @@ function addContact(e) {
     const phone = document.getElementById('phoneInput').value.trim();
     const email = document.getElementById('emailInput').value.trim();
     const group = document.getElementById('groupInput').value || 'friends';
-    const favourite = false;
 
     if (!name || !phone) {
         alert('Name and phone are required');
         return;
     }
-
     if (phone.length !== 10) {
         alert('Phone must be 10 digits');
         return;
@@ -59,184 +42,115 @@ function addContact(e) {
         phone,
         email,
         group,
-        favourite
+        favourite: false
     };
 
     contacts.push(contact);
     saveContacts();
-
-    alert('Contact saved!');
     e.target.reset();
-    closeAddForm();
+    alert('Contact saved');
     showSlide('all');
     displayContacts();
 }
 
-// ========================
-// Save to localStorage
-// ========================
+// ===== SAVE =====
 function saveContacts() {
     localStorage.setItem('contacts', JSON.stringify(contacts));
 }
-
 function saveMissed() {
     localStorage.setItem('missedCalls', JSON.stringify(missedCalls));
 }
 
-// ========================
-// Display contacts (All Contacts slide)
-// ========================
+// ===== DISPLAY CONTACTS =====
 function displayContacts(filter = 'all') {
-    const contactsList = document.getElementById('contactsList');
-    const favList = document.getElementById('favList');
+    currentFilter = filter;
 
-    if (!contactsList || !favList) return;
+    const listEl = document.getElementById('contactsList');
+    const favEl = document.getElementById('favList');
+    if (!listEl || !favEl) return;
 
     let list = [...contacts];
 
-    // group filter (office / family / friends)
-    if (filter !== 'all') {
+    if (filter === 'office' || filter === 'family' || filter === 'friends') {
         list = list.filter(c => c.group === filter);
     }
 
-    // alphabetical
     list.sort((a, b) => a.name.localeCompare(b.name));
 
-    contactsList.innerHTML = '';
-    favList.innerHTML = '';
+    listEl.innerHTML = '';
+    favEl.innerHTML = '';
 
     list.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'contact-item';
-        div.innerHTML = `
-            <div class="avatar">${c.name[0]}</div>
-            <div class="contact-info">
-                <div class="contact-item-name">${c.name}</div>
-                <div class="contact-item-phone">${c.phone}</div>
-            </div>
-            <div class="contact-actions">
-                <button onclick="showContactDetails(${c.id})" class="action-btn"><i class="fas fa-eye"></i></button>
-                <button onclick="toggleFavourite(${c.id})" class="action-btn" title="Favourite">
-                    ${c.favourite ? '★' : '☆'}
-                </button>
-                <button onclick="addMissed(${c.id})" class="action-btn" title="Add missed">
-                    <i class="fas fa-phone-slash"></i>
-                </button>
-                <button onclick="deleteContact(${c.id})" class="action-btn" title="Delete">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        `;
-        contactsList.appendChild(div);
+        const html = createContactHTML(c);
+        listEl.appendChild(html);
 
         if (c.favourite) {
-            const favDiv = div.cloneNode(true);
-            favList.appendChild(favDiv);
+            favEl.appendChild(createContactHTML(c));
         }
     });
 }
 
-// ========================
-// View contact details (right phone screen)
-// ========================
-let selectedContactId = null;
-
-function showContactDetails(id) {
-    const c = contacts.find(ct => ct.id === id);
-    if (!c) return;
-    selectedContactId = id;
-
-    const avatar = document.getElementById('detailAvatar');
-    const nameEl = document.getElementById('detailName');
-    const numEl = document.getElementById('detailNumber');
-    const mobileInfo = document.getElementById('detailMobile');
-    const groupInfo = document.getElementById('detailGroup');
-
-    if (avatar) avatar.textContent = c.name[0];
-    if (nameEl) nameEl.textContent = c.name;
-    if (numEl) numEl.textContent = c.phone;
-    if (mobileInfo) mobileInfo.textContent = c.phone;
-    if (groupInfo) groupInfo.textContent = c.group || 'Personal';
-
-    // switch to details slide if you have a separate slide, otherwise just update UI
+function createContactHTML(c) {
+    const div = document.createElement('div');
+    div.className = 'contact-item';
+    div.innerHTML = `
+        <div class="avatar">${c.name[0]}</div>
+        <div class="contact-info">
+            <div class="contact-item-name">${c.name}</div>
+            <div class="contact-item-phone">${c.phone}</div>
+        </div>
+        <div class="contact-actions">
+            <button class="action-btn" title="Favourite" onclick="toggleFavourite(${c.id})">
+                ${c.favourite ? '★' : '☆'}
+            </button>
+            <button class="action-btn" title="Add missed" onclick="addMissed(${c.id})">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+            <button class="action-btn" title="Delete" onclick="deleteContact(${c.id})">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
+    return div;
 }
 
-// ========================
-// Search contacts
-// ========================
-function searchContacts() {
-    const input = document.getElementById('searchInput');
-    if (!input) return;
-    const q = input.value.toLowerCase();
-
-    const filtered = contacts.filter(c =>
-        c.name.toLowerCase().includes(q) ||
-        c.phone.includes(q)
-    );
-    displayContactsListOnly(filtered);
-}
-
-function displayContactsListOnly(list) {
-    const contactsList = document.getElementById('contactsList');
-    if (!contactsList) return;
-
-    contactsList.innerHTML = '';
-    list.sort((a, b) => a.name.localeCompare(b.name));
-
-    list.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'contact-item';
-        div.innerHTML = `
-            <div class="avatar">${c.name[0]}</div>
-            <div class="contact-info">
-                <div class="contact-item-name">${c.name}</div>
-                <div class="contact-item-phone">${c.phone}</div>
-            </div>
-            <div class="contact-actions">
-                <button onclick="showContactDetails(${c.id})" class="action-btn"><i class="fas fa-eye"></i></button>
-                <button onclick="toggleFavourite(${c.id})" class="action-btn" title="Favourite">
-                    ${c.favourite ? '★' : '☆'}
-                </button>
-                <button onclick="addMissed(${c.id})" class="action-btn" title="Add missed">
-                    <i class="fas fa-phone-slash"></i>
-                </button>
-                <button onclick="deleteContact(${c.id})" class="action-btn" title="Delete">
-                    <i class="fas fa-trash"></i>
-                </button>
-            </div>
-        `;
-        contactsList.appendChild(div);
-    });
-}
-
-// ========================
-// Filter by group (tab buttons inside All Contacts slide)
-// ========================
+// ===== FILTER TABS =====
 function filterContacts(type, btn) {
-    currentFilter = type;
-
-    // remove active from all tab buttons
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
     if (btn) btn.classList.add('active');
-
     displayContacts(type);
 }
 
-// ========================
-// Toggle favourite
-// ========================
+// ===== SEARCH =====
+function searchContacts() {
+    const input = document.getElementById('searchInput');
+    const q = input.value.toLowerCase();
+
+    let list = [...contacts];
+    if (currentFilter === 'office' || currentFilter === 'family' || currentFilter === 'friends') {
+        list = list.filter(c => c.group === currentFilter);
+    }
+
+    const filtered = list.filter(c =>
+        c.name.toLowerCase().includes(q) || c.phone.includes(q)
+    );
+
+    const listEl = document.getElementById('contactsList');
+    listEl.innerHTML = '';
+    filtered.sort((a, b) => a.name.localeCompare(b.name));
+    filtered.forEach(c => listEl.appendChild(createContactHTML(c)));
+}
+
+// ===== FAVOURITE =====
 function toggleFavourite(id) {
-    const contact = contacts.find(c => c.id === id);
-    if (!contact) return;
-    contact.favourite = !contact.favourite;
+    const c = contacts.find(ct => ct.id === id);
+    if (!c) return;
+    c.favourite = !c.favourite;
     saveContacts();
     displayContacts(currentFilter);
 }
 
-// ========================
-// Delete contact
-// ========================
+// ===== DELETE CONTACT =====
 function deleteContact(id) {
     if (!confirm('Delete this contact?')) return;
     contacts = contacts.filter(c => c.id !== id);
@@ -244,17 +158,14 @@ function deleteContact(id) {
     displayContacts(currentFilter);
 }
 
-// ========================
-// Missed calls
-// ========================
+// ===== MISSED CALLS =====
 function addMissed(id) {
-    const contact = contacts.find(c => c.id === id);
-    if (!contact) return;
+    const c = contacts.find(ct => ct.id === id);
+    if (!c) return;
     missedCalls.unshift({
         id: Date.now(),
-        contactId: id,
-        name: contact.name,
-        phone: contact.phone,
+        name: c.name,
+        phone: c.phone,
         time: new Date().toISOString()
     });
     saveMissed();
@@ -269,14 +180,12 @@ function displayMissed() {
         (a, b) => new Date(b.time) - new Date(a.time)
     );
 
-    list.innerHTML = sorted
-        .map(c => `
+    list.innerHTML = sorted.map(c => `
         <div class="contact-card">
             <div>${c.name} (${c.phone})</div>
             <small>${new Date(c.time).toLocaleString()}</small>
         </div>
-    `)
-        .join('');
+    `).join('');
 }
 
 function clearMissed() {
@@ -286,37 +195,15 @@ function clearMissed() {
     displayMissed();
 }
 
-// ========================
-// Modal open/close for Add Contact
-// ========================
-function openAddForm() {
-    const modal = document.getElementById('addModal');
-    if (modal) modal.style.display = 'flex';
-}
-
-function closeAddForm() {
-    const modal = document.getElementById('addModal');
-    if (modal) modal.style.display = 'none';
-}
-
-// ========================
-// Init on page load
-// ========================
+// ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
-    // attach form submit
     const form = document.getElementById('contactForm');
-    if (form) {
-        form.addEventListener('submit', addContact);
-    }
+    form.addEventListener('submit', addContact);
 
-    // attach search
     const search = document.getElementById('searchInput');
-    if (search) {
-        search.addEventListener('input', searchContacts);
-    }
+    search.addEventListener('input', searchContacts);
 
-    // initial UI
     displayContacts();
     displayMissed();
-    showSlide('home');
+    showSlide('home');   // start on home slide
 });

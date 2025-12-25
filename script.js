@@ -93,23 +93,31 @@ function displayContacts(filter = 'all') {
     });
 }
 
-function createContactHTML(c) {
+ function createContactHTML(c) {
     const div = document.createElement('div');
     div.className = 'contact-item';
-   div.innerHTML = `
-    <div class="avatar">${c.name[0]}</div>
-    <div class="contact-info">
-        <div class="contact-item-name">${c.name}</div>
-        <div class="contact-item-phone">${c.phone}</div>
-        <div class="contact-item-phone">${c.note ? c.note : ''}</div>
-        <div class="contact-item-phone">
-            ${c.callTime ? new Date(c.callTime).toLocaleString() : ''}
+    div.innerHTML = `
+        <div class="avatar">${c.name[0]}</div>
+        <div class="contact-info">
+            <div class="contact-item-name">${c.name}</div>
+            <div class="contact-item-phone">${c.phone}</div>
+            <div class="contact-item-phone">${c.note ? c.note : ''}</div>
+            <div class="contact-item-phone">
+                ${c.callTime ? new Date(c.callTime).toLocaleString() : ''}
+            </div>
         </div>
-    </div>
-    <div class="contact-actions">
-        ...
-    </div>
-`;
+        <div class="contact-actions">
+            <button class="action-btn" title="Favourite" onclick="toggleFavourite(${c.id})">
+                ${c.favourite ? '★' : '☆'}
+            </button>
+            <button class="action-btn" title="Add missed" onclick="addMissed(${c.id})">
+                <i class="fas fa-phone-slash"></i>
+            </button>
+            <button class="action-btn" title="Delete" onclick="deleteContact(${c.id})">
+                <i class="fas fa-trash"></i>
+            </button>
+        </div>
+    `;
     return div;
 }
 

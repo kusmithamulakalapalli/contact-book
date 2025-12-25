@@ -63,5 +63,67 @@
     </section>
 
     <script src="script.js"></script>
+    <div class="app-bg">
+  <!-- Contacts List Screen -->
+  <div id="contactsScreen" class="phone-screen active">
+    <!-- top bar -->
+    <!-- search bar -->
+    <!-- list of contacts -->
+    <!-- bottom tab bar -->
+  </div>
+
+  <!-- Contact Detail Screen -->
+  <div id="detailScreen" class="phone-screen">
+    <!-- gradient header with photo, name, number -->
+    <!-- 4 round buttons: Message, Call, Video, Mail -->
+    <!-- white details area -->
+    <!-- bottom tab bar (same as list) -->
+  </div>
+</div>
+<div class="list-header">
+  <h2>My Contacts</h2>
+  <button class="icon-btn">+</button>
+</div>
+
+<div class="tabs-row">
+  <button class="tab active">All Contacts</button>
+  <button class="tab">Office</button>
+  <button class="tab">Family</button>
+  <button class="tab new">New Group</button>
+</div>
+
+<div class="search-box">
+  <input type="text" placeholder="Search by name or number">
+</div>
+
+<div class="contacts-list">
+  <!-- repeat rows -->
+  <div class="contact-row" onclick="openDetails()">
+    <div class="avatar"></div>
+    <div class="contact-text">
+      <div class="name">Aaron</div>
+      <div class="number">+91 9000 000 000</div>
+    </div>
+    <div class="dots">⋮</div>
+  </div>
+</div>
+
+<div class="bottom-nav">
+  <!-- 4–5 small icons like in your picture -->
+</div>
+<script>
+  const contactsScreen = document.getElementById('contactsScreen');
+  const detailScreen = document.getElementById('detailScreen');
+
+  function openDetails() {
+    contactsScreen.classList.remove('active');
+    detailScreen.classList.add('active');
+  }
+
+  function goBackToList() {
+    detailScreen.classList.remove('active');
+    contactsScreen.classList.add('active');
+  }
+</script>
 </body>
 </html>

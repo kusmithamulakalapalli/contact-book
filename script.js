@@ -31,15 +31,11 @@ function toggleFavorite(index) {
 }
 function addContact() {
     const name = nameInput.value.trim();
-    const phone = phoneInput.value.trim();
+    const phone = phonenInput.value.trim();
     const email = emailInput.value.trim();
-    const phoneClean = phone.replace(/D/g, '');
-if (!/^d{10}$/.test(phoneClean)) {
-    alert('Phone number must be exactly 10 digits.');
-    return;
-}
+    
     if (!name || !phone) return alert('Name and phone required!');
-    contacts.push({ name, phone: phoneclean, email,favorite: false });
+    contacts.push({ name, phone , email,favorite: false });
     contacts.sort((a, b) => a.name.localeCompare(b.name)); // Auto-sort
     localStorage.setItem('contacts', JSON.stringify(contacts));
     displayContacts();
